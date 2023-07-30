@@ -1,0 +1,21 @@
+.todo {
+    display: flex;
+    justify-content: space-between;
+    border: 1px solid green;
+    margin-top: 5px;
+    padding: 5px 10px;
+}
+
+.todo div {
+    display: flex;
+    align-items: center;
+}
+
+.todo__left {
+    width: 70%;
+}
+
+.todo__right {
+    width: 17%;
+    justify-content: space-between;
+}

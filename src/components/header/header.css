@@ -1,0 +1,10 @@
+.headerSection {
+    background: #ccc;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.headerSection > h1 {
+    text-align: center;
+    font-size: 3rem;
+}
