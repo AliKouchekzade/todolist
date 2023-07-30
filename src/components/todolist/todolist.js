@@ -1,6 +1,5 @@
 import { useToDos } from "../providers/todoprovider";
 import ToDo from "../todo/todo";
-import "./todolist.css";
 
 const ToDoList = () => {
   const todos = useToDos();

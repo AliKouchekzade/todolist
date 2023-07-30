@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useToDosActions } from "../providers/todoprovider";
-import "./todoform.css";
 
 const ToDoForm = () => {
   const [todoInput, setToDoInput] = useState("");
-  const { addToDo } = useToDosActions();
+
+  const dispachToDo = useToDosActions();
 
   const toDoInputHandler = (event) => {
     setToDoInput(event.target.value);
@@ -16,7 +16,7 @@ const ToDoForm = () => {
       alert("input is empty");
       return;
     }
-    addToDo(todoInput);
+    dispachToDo({type:"add",title:todoInput});
     setToDoInput("");
   };
 
@@ -26,10 +26,10 @@ const ToDoForm = () => {
         <input
           type="text"
           value={todoInput}
-          placeholder="task"
+          placeholder="New Todo"
           onChange={toDoInputHandler}
         ></input>
-        <button className="button" type="submit">add</button>
+        <button className="button" type="submit">Add</button>
       </form>
     </div>
   );
