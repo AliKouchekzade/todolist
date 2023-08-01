@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { useToDosActions } from "../providers/todoprovider";
+import { useCategory, useToDosActions } from "../providers/todoprovider";
+import Select from "react-select";
 
 const ToDoForm = () => {
   const [todoInput, setToDoInput] = useState("");
-
+  const categorys = [...useCategory()].slice(1);
   const dispachToDo = useToDosActions();
+  const [selectedCategory, setSelectedCategory] = useState(categorys[0]);
 
   const toDoInputHandler = (event) => {
     setToDoInput(event.target.value);
@@ -16,7 +18,7 @@ const ToDoForm = () => {
       alert("input is empty");
       return;
     }
-    dispachToDo({type:"add",title:todoInput});
+    dispachToDo({ type: "add", title: todoInput ,category:selectedCategory.value });
     setToDoInput("");
   };
 
@@ -29,7 +31,14 @@ const ToDoForm = () => {
           placeholder="New Todo"
           onChange={toDoInputHandler}
         ></input>
-        <button className="button" type="submit">Add</button>
+        <Select
+          options={categorys}
+          value={selectedCategory}
+          onChange={(sel) => setSelectedCategory(sel)}
+        />
+        <button className="button" type="submit">
+          Add
+        </button>
       </form>
     </div>
   );

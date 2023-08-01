@@ -1,4 +1,4 @@
-import { createRef, useEffect, useRef } from "react";
+import { createRef, useEffect } from "react";
 import { useToDosActions } from "../providers/todoprovider";
 
 const ToDo = ({ todo }) => {
@@ -40,6 +40,7 @@ const ToDo = ({ todo }) => {
         />
       </div>
       <div className="todo__right">
+      <span>{todo.category}</span>
         <button
           className="button"
           onClick={() => dispachToDo({ id: todo.id, type: "editButton" })}
