@@ -6,7 +6,6 @@ import {
   useState,
 } from "react";
 import { v4 as uuid } from "uuid";
-import { todoDB } from "../../db/todosDB";
 
 const todosContext = createContext();
 const setTodosContext = createContext();
@@ -14,15 +13,20 @@ const alltodosContext = createContext();
 const categoryContext = createContext();
 const setCategoryContext = createContext();
 
-const ToDosPovider = ({ children }) => {
-  const tododatabase = todoDB;
+const getAllTodosFromLocalStorage = () =>
+  JSON.parse(localStorage.getItem("todos"));
+const setAllTodosToLocalStorage = (all) =>
+  localStorage.setItem("todos", JSON.stringify(all));
+const getAllCategoryFromLocalStorage = () =>
+  JSON.parse(localStorage.getItem("category"));
+const setAllCategoryToLocalStorage = (all) =>
+  localStorage.setItem("category", JSON.stringify(all));
 
-  const [alltodos, setAllTodos] = useState(tododatabase);
+const ToDosPovider = ({ children }) => {
+  const [alltodos, setAllTodos] = useState([]);
   const [category, setCategory] = useState([
     { value: "All", label: "All" },
     { value: "Inbox", label: "Inbox" },
-    { value: "Today", label: "Today" },
-    { value: "Tomorrow", label: "Tomorrow" },
   ]);
   const [selected, setSelected] = useState("All");
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -40,10 +44,11 @@ const ToDosPovider = ({ children }) => {
   };
 
   useEffect(() => {
-    //HHHHHHHHHHhhhMMMMMMMMMMMMmmmm
-    setAllTodos(tododatabase);
+    setAllTodos(getAllTodosFromLocalStorage());
     dispachToDo({ type: "update" });
-  }, [tododatabase]);
+    console.log("get todos on mount");
+    setCategory(getAllCategoryFromLocalStorage());
+  }, []);
 
   const Reduce = (state, action) => {
     if (action.type === "update")
@@ -61,12 +66,14 @@ const ToDosPovider = ({ children }) => {
         },
       ];
       setAllTodos(updated);
+      setAllTodosToLocalStorage(updated);
       return filter(updated, selected, selectedCategory);
     }
 
     if (action.type === "delete") {
       const updated = alltodos.filter((obj) => obj.id !== action.id);
       setAllTodos(updated);
+      setAllTodosToLocalStorage(updated);
       return filter(updated, selected, selectedCategory);
     }
 
@@ -94,7 +101,7 @@ const ToDosPovider = ({ children }) => {
     return filter(todosCopy, selected, selectedCategory);
   };
 
-  const [todos, dispachToDo] = useReducer(Reduce, tododatabase);
+  const [todos, dispachToDo] = useReducer(Reduce, alltodos);
 
   return (
     <todosContext.Provider value={todos}>
@@ -123,8 +130,11 @@ export const useCategoryActions = () => {
   const setCategory = useContext(setCategoryContext);
   const category = useCategory();
 
-  const addCategory = (value) =>
-    setCategory([...category, { value, label: value }]);
+  const addCategory = (value) => {
+    const updatedcat = [...category, { value, label: value }];
+    setCategory(updatedcat);
+    setAllCategoryToLocalStorage(updatedcat);
+  };
 
   return { addCategory };
 };
